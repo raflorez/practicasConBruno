@@ -17,20 +17,23 @@ int main()
     Nodo* fte = NULL;
     Nodo* fin = NULL;
     Nodo* pila = NULL;
-    int x = NULL;
+
+
     for (int i = 0; i < 10; i++){
         push(pila, i);
-        while (pila){
-            cout <<pop(pila);
-
-        }
+        
+    }
+    while (pila){
+        cout <<pop(pila);
     }
     cout<<endl;
+
     for (int i = 0; i< 10; i++){
         encolar(fte, fin, i);
-        while(fte){
-            cout << desencolar(fte, fin);
-        }
+        
+    }
+    while(fte){
+        cout << desencolar(fte, fin);
     }
 }
 
