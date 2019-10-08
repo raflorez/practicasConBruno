@@ -1,82 +1,80 @@
 #include <iostream>
-#include <stdlib.h>
-
 using namespace std;
 
 struct Nodo{
     int info;
     Nodo* sgts;
 };
-
-Nodo* insertar_ordenado(Nodo*&, int);
-void obtener_lista(Nodo*);
+void push(Nodo*&, int);
+int pop(Nodo*&);
+void encolar(Nodo*&, Nodo*&, int);
+int desencolar(Nodo*&, Nodo*&);
 
 int main()
 {
-    //Hacker mood
     system("color 0a");
+    Nodo* p = NULL;
+    Nodo* fte = NULL;
+    Nodo* fin = NULL;
+    Nodo* pila = NULL;
 
-    //La lista es una asociación de nodos básicamente
-    Nodo* lista = NULL;
-    int x;
 
-    //Se va pidiendo 3 elementos para agregar a la lista
-    for (int i = 0; i < 3; i++){
-        cout<<"inserte x\n";
-        cin>>x;
-        insertar_ordenado(lista, x);
+    for (int i = 0; i < 10; i++){
+        push(pila, i);
+        
     }
+    while (pila){
+        cout <<pop(pila);
+    }
+    cout<<endl;
 
-    cout<<"\nA continuación una lista ordenada\n";
-    obtener_lista(lista);
-    //
-
-    return 0;
-
+    for (int i = 0; i< 10; i++){
+        encolar(fte, fin, i);
+        
+    }
+    while(fte){
+        cout << desencolar(fte, fin);
+    }
 }
 
-Nodo* insertar_ordenado(Nodo* &lista, int x){
-    Nodo* p = new Nodo();
+void push(Nodo *&pila, int x){
+    Nodo *p = new Nodo();
     p->info = x;
+    p->sgts = pila;
 
-    if (lista == NULL  || x < lista->info){
-        p->sgts = lista;
-
-        lista = p;
-    }else{
-        Nodo* q = lista;
-
-        while(q->sgts != NULL && x>q->sgts->info){
-            q = q->sgts;
-        }
-
-        p->sgts = q->sgts;
-        q->sgts = p;
-    }
-
-    return p;
-}
-
-void obtener_lista(Nodo* lista){
-    /*
-    SGTS: Siguiente
-
-    el WHILE muestra la info de cada Nodo
-    yendo desde el SGTS a SGTS hasta cuando
-    vale NULL, porque significarìa que no
-    habría siguiente y por lo tanto ahí
-    terminarìa la lista.
-
-    */
-    Nodo* p = new Nodo();
-    p = lista;
-
-    cout<<p->info<<"\n";
-
-    while(p->sgts != NULL){
-        p = p->sgts;
-        cout<<p->info<<"\n";
-    }
+    pila = p;
 
     return;
+}
+
+void encolar(Nodo* &fte, Nodo* &fin, int x){
+    Nodo *p = new Nodo();
+    p->info = x;
+    p->sgts = NULL;
+
+    if (fte == NULL) fte = p; else fin->sgts = p;
+    fin = p;
+
+    return;
+}
+
+int pop(Nodo* &pila){
+    Nodo *p = pila;
+    int x = p->info;
+    pila = p->sgts;
+
+    delete p;
+
+    return x;
+}
+
+int desencolar(Nodo* &fte, Nodo*&fin){
+    Nodo *p = fte;
+    int x = p->info;
+    fte = p->sgts;
+    if (fte == NULL) fin = NULL;
+
+    delete p;
+
+    return x;
 }
