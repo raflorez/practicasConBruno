@@ -5,110 +5,203 @@
 
 using namespace std;
 
-struct Alumnos{
-    Alumnos* sgts;
-    int nro_legajo;
-    int cod_materia;
-    char nombre[20];
+//Struct's
+struct Subject{
+    int id;
+    char name[20];
 };
 
-
-struct Materia{
-    Materia* sgts;
-    int cod_materia;
-    char nombre[20];
+//file = legajo Ahora writearé my code en inglush
+struct Student{
+    int cod_file;
+    int cod_subject;
+    char name[20];
+};
+template <typename T>
+struct Nodo
+{
+    T info;
+    Nodo<T>* next;
 };
 
-//Prototipos
+//Prototype's
 
-//main function
-void mostrar_list_alumnos();
-void cargar_alumnos();
-void mostrar_materias();
-void cargar_materias();
+//tools
+template <typename T>
+void push(Nodo<T>*&, T v);
 
-//de Carga
-Alumnos* insertar_alumno(Alumnos* &lista, int, int, char[]);
+void showStudent(Student);
 
+template <typename T>
+void show(Nodo<T>*, void (*)(T));
+
+//inteface function
+void show_students_i();
+void load_students_i();
+void show_subject_i();
+void load_subject_i();
+
+//tools
+Student createStudent(int, char[20], int);
+
+//File functions
+
+int registers_amount( FILE*);
+int get_position_p( FILE * f);
+int seek( FILE*, int);
+
+template <typename R>
+int read( FILE*, R*);
+
+template <typename R>
+int write( FILE*, R);
+
+template <typename T>
+void load_file(FILE*&,  Nodo<T>*&);
 int main()
 {
-    cout<<"Elija la opción \n 1_ mostrar listado de alumnos \n 2_ mostrar materias disponibles\n 3_ cargar alumnos\n 4_ cargar materias \n";
+    cout<<"Choose a option \n 1_ Show student's \n 2_ Load student's\n 3_ Show subject's\n 4_ Load subject's \n";
     int op;
     cin>>op;
     switch(op){
         case 1:
-            mostrar_list_alumnos();
+            show_students_i();
             break;
         case 2:
-            cout<<"\n  Usted ha elegido cargar alumnos";
-            cargar_alumnos();
+            cout<<"\n  You choose \"Load student's\"";
+            load_students_i();
             break;
         case 3:
-            mostrar_materias();
+            show_subject_i();
             break;
         case 4:
-            cargar_materias();
+            load_subject_i();
             break;
 
         default:
-            cout<<"Seleccione una opción valida uwu";
+            cout<<"Invalidate!!";
             break;
 
 
     }
+
 }
 
-//Main
-void mostrar_list_alumnos(){
-    //TODO...
-}
-void cargar_alumnos(){
-    Alumnos* lista = NULL;
 
 
-    int nro_insert = 3;
+template <typename T>
+void push(Nodo<T>*& p, T v){
 
-    //parametros
-    int nro_legajo;
-    int cod_materia;
-    char nombre[20];
-    //Vas insertando numeros en la lista y se van a ordenar
-    //for (int i = 0; i < nro_insert; i++){
-        cout<<"\ninserte cod_materia \n";
-        cin>>cod_materia;
-        cout<<"\ninserte nro_legajo \n";
-        cin>>nro_legajo;
-        cout<<"\n inserte nombre";
-        cin.getline(nombre,20);
-        system("pause");
-        //insertar_alumno(lista, nro_legajo, cod_materia, nombre);
-    //}
-    //Muestra el primer numero, tiene que ser el más chico porque fue ordenandose
-    //cout<<lista->nombre;
-}
-void mostrar_materias(){
-    //TODO...
-}
-void cargar_materias(){
-    //TODO...
+    Nodo<T>* q = new Nodo<T>();
+    q->info = v;
+    q->next= p;
+    p = q;
+    return;
 }
 
-//Tools
-Alumnos* insertar_alumno(Alumnos* &lista, int nro_legajo, int cod_materia, char nombre[]){
-    Alumnos* p = new Alumnos();
-    p->nro_legajo = nro_legajo;
-    p->cod_materia = cod_materia;
-    strcpy( p->nombre, nombre );
-    if (lista == NULL  || nro_legajo < lista->nro_legajo){
-        p->sgts = lista;
-        lista = p;
-    }else{
-        Alumnos* q = lista;
-        while(q->sgts != NULL && nro_legajo>q->sgts->nro_legajo){
-            q = q->sgts;
-        }
-        p->sgts = q->sgts;
-        q->sgts = p;
+void showStudent(Student student){
+    cout << "His name is " <<student.name<< ", his file code is ";
+    cout <<student.cod_file<<" and his subject is "<<student.cod_subject<<endl;
+
+}
+template <typename T>
+void show(Nodo<T>* l, void (*show)(T)){
+    Nodo<T>* aux = l;
+    while( aux!=NULL ){
+        show(aux->info);
+        aux = aux->next;
     }
-    return p;
 }
+
+ Student createStudent(int cod_file, char name[20] , int cod_subject){
+    Student s;
+    s.cod_file = cod_file;
+    strcpy_s(s.name, name);
+    s.cod_subject = cod_subject;
+    return s;
+}
+//Main
+void show_students_i(){
+    //TODO...
+}
+void load_students_i(){
+
+    Nodo<Student>* students = NULL;
+
+    cout<<"\n Say the number of register that you can put\n";
+    int n, cf, cs = 0;
+    char nm[20];
+    cin>>n;
+    for (int i = 0; i < n; ++i) {
+        cout<<"\n Okey. Now say FILE CODE of student"<<endl;
+        cin>>cf;
+        cout<<"\n Okey. Now say NAME of student"<<endl;
+        cin.ignore();
+        cin.getline(nm,20);
+        cout<<"\n Okey. Now say SUBJECT CODE of student"<<endl;
+        
+        cin>>cs;
+        push(students, createStudent(cf, nm, cs));
+    }
+    
+
+
+    show(students, showStudent);
+
+    /* Open file */
+    FILE* f = fopen("..\\datastorage.dat", "wb+");
+
+    /* Load Studedst*/
+    load_file(f, students);
+    fclose(f);
+
+}
+void show_subject_i(){
+    //TODO...
+}
+void load_subject_i(){
+    //TODO...
+}
+
+//Files functions
+
+template <typename R>
+int registers_amount( FILE * f){
+    R r;
+    fseek(f, 0, SEEK_END);
+    return ftell(f)/sizeof(r);
+}
+template <typename R>
+int get_position_p( FILE * f){
+    R r;
+    return ftell(f)/sizeof(r);
+}
+
+template <typename R>
+int seek( FILE * f, int pos){
+    R r;
+    return fseek(f, pos * sizeof(r), SEEK_SET);
+}
+
+template <typename R>
+int read( FILE * f, R *r){
+    return fread(&r, sizeof(r) , 1, f);
+}
+
+template <typename R>
+int write( FILE * f, R r) {
+
+    return fwrite(&r, sizeof(R), 1, f);
+}
+
+//Main function
+
+template <typename T>
+void load_file(FILE*& f, Nodo<T>*& p){
+
+    while( p!=NULL ){
+        write(f,  p->info);
+        p = p->next;
+    }
+}
+
