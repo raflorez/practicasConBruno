@@ -49,8 +49,9 @@ void load_file(FILE*&,  Nodo<T>*&);
 int main()
 {
 	//declared variables
+	system("color 01");
 	int op;
-	
+
     cout<<"que desea hacer?"<<endl;
     
     cout<<"\n 1_Leer archivo"<<endl;
