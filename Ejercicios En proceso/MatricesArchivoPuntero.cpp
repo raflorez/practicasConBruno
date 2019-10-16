@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
-
+#include <stdlib.h>
 
 using namespace std;
 
@@ -24,18 +24,19 @@ struct Data{
  * Prototypes function
  */
 //Tools
-
+int lengthInt(int);
 Data createData(int, int, int);
+void show_matrix3x2(Node<int>*[3][2]);
 
 //List
 template <typename T>
 void push(Node<T>*&, T v);
 
-void showInt(int);
 
 template <typename T>
 void show(Node<T>*, void (*)(T));
 
+void showInt(int);
 //inteface function
 void show_matrix_i();
 void load_matrix_i();
@@ -62,9 +63,10 @@ void write(FILE*, T);
  */
 int main()
 {
+
     //declared variables
     int op;
-    system("color 01");
+    system("color 09");
     cout<<" __    __     ______     ______   ______     ______     __  __    \n"
           "/\\ \"-./  \\   /\\  __ \\   /\\__  _\\ /\\  == \\   /\\  __ \\   /\\_\\_\\_\\   \n"
           "\\ \\ \\-./\\ \\  \\ \\  __ \\  \\/_/\\ \\/ \\ \\  __<   \\ \\  __ \\  \\/_/\\_\\/_  \n"
@@ -158,12 +160,24 @@ void load_matrix_i(){
         }
     }
 
+    show_matrix3x2(matrix);
+
 }
 
 /*
  * Tools function
  */
 
+int lengthInt(int x){
+    int n = x;
+    int i = 0;
+    while(n>0){
+        n /= 10;
+        i++;
+    }
+    return i;
+
+}
 Data createData(int col, int row, int value){
     Data d;
     d.col = col;
@@ -172,6 +186,35 @@ Data createData(int col, int row, int value){
 
     return d;
 }
+
+void show_matrix3x2(Node<int>* matrix[3][2]){
+
+    int size_col;
+    for(int i = 0; i < 3; i++){
+        cout<<"|--------------------------------------|"<<endl;
+        cout<<"|";
+        for(int j = 0; j < 2; j++){
+            show(matrix[i][j], showInt);cout<<"|";
+        }
+        cout<<endl;
+
+    }
+
+    /*
+
+
+        cout<<"THIS IS THE MATRIX"<<endl;
+     //12 char b cel
+    cout<<"|--------------------------------------|"<<endl;
+    cout<<"|            |            |            |"<<endl;
+    cout<<"|------------|------------|------------|"<<endl;
+    cout<<"|            |            |            |"<<endl;
+    cout<<"|------------|------------|------------|"<<endl;
+
+*/
+}
+
+
 /*
  * Files function
  */
@@ -223,18 +266,16 @@ void push(Node<T>*& p, T v){
 }
 
 template <typename T>
-void showInt(int x){
-    cout<<"the value is :"<<x;
-}
-
-
-template <typename T>
-void show(Node<T>* l, void (*show)(T)){
+void show(Node<T>* l, void (*showType)(T)){ //para obtener el tamaño
     Node<T>* aux = l;
     while( aux!=NULL ){
-        show(aux->info);
+        showType(aux->info);
         aux = aux->next;
     }
+}
+
+void showInt(int x){
+    cout<<x<<"-";
 }
 
 template <typename T>
@@ -270,4 +311,6 @@ template <typename T>
 bool descendente(T a, T b){
     return a > b;
 }
+
+
 
