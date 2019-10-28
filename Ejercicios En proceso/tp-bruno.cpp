@@ -14,37 +14,37 @@ struct Node
 };
 
 template <typename T>
-T ascedente(T a, T b){
-    return a - b;
+int ascedente(T a, T b){
+    return a < b;
 }
 
 
 template <typename T>
-T descendente(T a, T b){
-    return a + b;
+int descendente(T a, T b){
+    return a > b;
 }
 
 template <typename T>
 Node<T>* insertar_ordenado(Node<T>* &lista, T x, int (*criterio)(T a, T b)){
-        //crear el nodo
-    Node<T>* nuevo = new Node<T>();
-        nuevo->info = x;
-        nuevo->next = NULL;
-        //si esta vacia o va delante del primero
-        if (lista==NULL || criterio(lista->info,x)>0 ){
-            lista = nuevo;
-            return nuevo;
-        }
-        //si no salió, no esta vacía y va entre dos o al final
-        Node<T>* aux = lista;
-        while( aux->next != NULL && criterio(aux->next->info,x)<0) {
-            aux = aux->next;
-        }
-        // enlaza los punteros
-        nuevo -> next = aux->next,
-        aux -> next = nuevo;
-        return nuevo;
+    Node<T>* p = new Node<T>();
+    p->info = x;
 
+    if (lista == NULL  || criterio(x, lista->info)){
+        p->next = lista;
+
+        lista = p;
+    }else{
+        Node<T>* q = lista;
+
+        while(q->next != NULL && criterio(q->next->info,x)){
+            q = q->next;
+        }
+
+        p->next = q->next;
+        q->next = p;
+    }
+
+    return p;
 }
 
 void showInt(int x){
@@ -68,6 +68,12 @@ int main(){
     insertar_ordenado(nodosAutistas, 3, ascedente);
     insertar_ordenado(nodosAutistas, 1, ascedente);
 
-    show(nodosAutistas, showInt);
+    Node<int>* aux = nodosAutistas;
+    while( aux!=NULL ){
+        cout<<aux->info<<"-";
+        aux = aux->next;
+    }
 }
+
+
 
