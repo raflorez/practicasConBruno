@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Presentación de algoritmos</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/night.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-transition="convex" data-background="#EC0868"><h3>Insertar ordenadamente con funciones por parámetros</h3></section>
+				<section data-transition="convex" data-background="#370031">
+                         <h4>Temas</h4>
+                         <ul>
+                              <li class="fragment fade-in">Inicio</li>
+                              <li class="fragment fade-in">Algoritmo de insertar ordenado</li>
+                              <li class="fragment fade-in">Templates</li> 
+                              <li class="fragment fade-in">
+                                   Funciones como punteros
+                              </li>
+                              <li class="fragment fade-in">
+                                   Algoritmo de insertar ordenado combinado con template y funciones
+                              </li>
+                              <li class="fragment fade-in">Conclusión</li> 
+				</section>
+				<section data-background="#832232">
+					<section>
+							<h3>Algoritmo de insertar ordenado</h3>
+					</section>
+					<section>
+							<h4>El struct del Nodo</h4>
+							<pre><code data-trim data-noescape>
+									struct Node {
+										int info;
+										Node* next;
+									};
+								</code></pre>
+					</section>
+					<section>
+						<h4>La función para poder insertar:</h4>
+						<pre><code data-trim data-noescape>
+							void insertar_ordenado(Node* &lista, int x){
+								Node* p = new Node;
+								p->info = x;
+							
+								if (lista == NULL  || x < lista->info){
+									p->next = lista;
+							
+									lista = p;
+								}else{
+									Node* q = lista;
+							
+									while(q->next != NULL && x>q->next->info){
+										q = q->next;
+									}
+							
+									p->next = q->next;
+									q->next = p;
+	
+									return;
+								}
+							}	
+							</code></pre>
+					</section>
+				</section>
+				<section data-background="#CE8964">
+					<section data-transition="zoom"><h3>Templates</h3></section>
+					<section data-transition="zoom">¿Qué son?</section>
+					<section>¿Por qué utilizarlos?</section>
+					<section>
+						<h4>Ejemplo:</h4>
+						Así lo inicializamos...
+						<pre><code data-trim data-noescape>
+						template &lt;typename T&gt; 
+						struct Node
+						{
+							T info;
+							Node&lt;T&gt;* next;
+						};
+						</code></pre>
+						Y así lo utilizamos...
+						<pre><code data-trim data-noescape>
+								Node&lt;int&gt;* nodo;
+							</code></pre>
+							
+					</section>
+				</section>
+				
+				<section data-background="#D95D39">
+						<section data-transition="zoom"><h3>Funciones como punteros</h3></section>
+						<section data-transition="zoom">¿Qué son?</section>
+						<section>¿Por qué utilizarlos?</section>
+						<section>
+							<h4>Ejemplo:</h4>
+							Inicializamos...
+							<pre><code data-trim data-noescape>
+									//Típicas funciones
+									int sumar(int x, int y){
+										return x+y;
+									}
+									int restar(int x, int y){
+										return x-y;
+									}
+									//Para dar el atributo se hace de la siguiente manera
+									void calcular(int x, int y, int (*operacion)(int a, int b)){
+										return operacion(x,y);
+									}
+								</code></pre>
+							Y así lo utilizamos...
+							<pre><code data-trim data-noescape>
+									calcular(2,3, restar);
+									//output: -1;
+								</code></pre>
+								
+						</section>
+					</section>
+					<section data-background="#7A28CB">
+							<section data-transition="zoom"><h3>Algoritmo de ordenar </h3></section>
+							<section data-transition="zoom">Pero esta vez con Template y Función como puntero</section>
+							<section>
+								Ahora con las funciones cómo punteros podremos crear criterio que nosotros queramos!!!
+								<pre><code data-trim data-noescape>
+										template &lt;typename T&gt;
+										int ascedente(T a, T b){
+											return a < b;
+										}
+												
+												
+										template &lt;typename T&gt;
+										int descendente(T a, T b){
+											return a > b;
+										}
+									</code></pre>
+					
+							</section>
+							<section>
+									La función terminará quedando así
+									<pre><code data-trim data-noescape>
+									template &lt;typename T&gt;
+									void insertar_ordenado(Node&lt;T&gt;* &lista, T x, int (*criterio)(T a, T b)){
+										Node&lt;T&gt;* p = new Node&lt;T&gt;();
+										p->info = x;
+									
+										if (lista == NULL  || criterio(x, lista->info)){
+											p->next = lista;
+									
+											lista = p;
+										}else{
+											Node&lt;T&gt;* q = lista;
+									
+											while(q->next != NULL && criterio(q->next->info,x)){
+												q = q->next;
+											}
+									
+											p->next = q->next;
+											q->next = p;
+										}
+									
+										return;
+									}
+										</code></pre>
+						
+								</section>
+								<section>
+										<h4>La anterior función era así. Malarda!</h4>
+										<pre><code data-trim data-noescape>
+											void insertar_ordenado(Node* &lista, int x){
+												Node* p = new Node;
+												p->info = x;
+											
+												if (lista == NULL  || x < lista->info){
+													p->next = lista;
+											
+													lista = p;
+												}else{
+													Node* q = lista;
+											
+													while(q->next != NULL && x>q->next->info){
+														q = q->next;
+													}
+											
+													p->next = q->next;
+													q->next = p;
+					
+													return;
+												}
+											}	
+											</code></pre>
+									</section>
+									<section>
+											<h4>Así la usamos!</h4>
+											<pre><code data-trim data-noescape>
+													
+											Node&lt;int&gt;* nodos = NULL;
+											insertar_ordenado(nodos, 2, ascedente);
+												</code></pre>
+												<h4>Gracias al template podemos pasar cualquier tipo</h4>
+											<pre><code data-trim data-noescape>
+											Node&lt;string&gt;* nodos = NULL;
+											insertar_ordenado(nodos, "hola", ascedente);
+												</code></pre>
+											
+										</section>
+						</section>
+						<section data-background="#151E3F">
+							<section>
+								<h3>La Conclusión</h3>
+							</section>
+							<section>
+								Para ver esta Presentación y más contenido de la materia visita mi repo de github!
+								Github: @raflorez (En el repositorio "Prácticas con bruno")
+
+							</section>
+							<section>
+									Material externo utilizada:
+									<ul>
+										<li>Word Press del profe (https://droscarbruno.wordpress.com/)</li>
+										<li>Cplus plus(http://www.cplusplus.com/reference/)</li>
+										<li>StarOverFlow (https://es.stackoverflow.com/)</li>
+										<li>Reveal JS (https://es.stackoverflow.com/)</li>
+										<li>Github(https://github.com/</li>
+									</ul>
+									
+								</section>
+							<section>
+								<img src="https://i.chzbgr.com/full/9304569856/h8E0A48D8/" style="height: 90vh; width: auto;;"="">
+							</section>
+						</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
