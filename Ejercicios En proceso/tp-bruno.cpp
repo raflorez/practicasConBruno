@@ -63,12 +63,12 @@ void show(Node<T>* l, void (*showType)(T)){ //para obtener el tamaño
 int main(){
     cout<<"voy a insertar un numero con criterio de ordne decente";
 
-    Node<int>* nodosAutistas = NULL;
-    insertar_ordenado(nodosAutistas, 2, ascedente);
-    insertar_ordenado(nodosAutistas, 3, ascedente);
-    insertar_ordenado(nodosAutistas, 1, ascedente);
+    Node<int>* nodos = NULL;
+    insertar_ordenado(nodos, 2, ascedente);
+    insertar_ordenado(nodos, 3, ascedente);
+    insertar_ordenado(nodos, 1, ascedente);
 
-    Node<int>* aux = nodosAutistas;
+    Node<int>* aux = nodos;
     while( aux!=NULL ){
         cout<<aux->info<<"-";
         aux = aux->next;
