@@ -1,73 +1,78 @@
 #include <iostream>
 #include <string.h>
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
-struct Persona{
-	char nombre [20];
-	char apellido [20];
-};
-
-template <typename T>
-struct Node {
-	T info;
-	Node<T>* next;
-};
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
 
 
 template <typename T>
-void show(Node<T>*);
+struct Node
+{
+    T info;
+    Node<T>* next;
+};
 
 template <typename T>
-void insertar_ordenado(Node<T>*&, T );
-//MAIN
-int main() {
-	
-
-	
-	
-	Node<int>* lista = NULL;
-	
-
-	
-	insertar_ordenado(lista,1);
-	insertar_ordenado(lista,5);	
-		insertar_ordenado(lista,2);	
-	show(lista); 
+int ascedente(T a, T b){
+    return a < b;
 }
 
- template <typename T>
-void insertar_ordenado(Node<T>* &lista, T x){
-    Node<T>* p = new Node<T>;
+
+template <typename T>
+int descendente(T a, T b){
+    return a > b;
+}
+
+template <typename T>
+Node<T>* insertar_ordenado(Node<T>* &lista, T x, int (*criterio)(T a, T b)){
+    Node<T>* p = new Node<T>();
     p->info = x;
 
-    if (lista == NULL  || x < lista->info){
+    if (lista == NULL  || criterio(x, lista->info)){
         p->next = lista;
 
         lista = p;
     }else{
         Node<T>* q = lista;
 
-        while(q->next != NULL && x>q->next->info){
+        while(q->next != NULL && criterio(q->next->info,x)){
             q = q->next;
         }
 
         p->next = q->next;
         q->next = p;
     }
+
+    return p;
 }
 
-template <typename T>
-void show(Node<T>* p){
-	Node<T>* aux = p;
-	
-	while(aux != NULL){
-		cout<<"el nodo contiene el entero"<<aux->info<<endl;
-		aux = aux->next;
-	}
-	
-	cout<<endl<<" ya se recorrio toda la lista";
-	
-	
-	
+void showInt(int x){
+    cout<<x<<"-";
 }
+template <typename T>
+void show(Node<T>* l, void (*showType)(T)){ //para obtener el tamaño
+    Node<T>* aux = l;
+    while( aux!=NULL ){
+        showType(aux->info);
+        aux = aux->next;
+    }
+}
+
+
+int main(){
+    cout<<"voy a insertar un numero con criterio de ordne decente";
+
+    Node<int>* nodos = NULL;
+    insertar_ordenado(nodos, 2, ascedente);
+    insertar_ordenado(nodos, 3, ascedente);
+    insertar_ordenado(nodos, 1, ascedente);
+
+    Node<int>* aux = nodos;
+    while( aux!=NULL ){
+        cout<<aux->info<<"-";
+        aux = aux->next;
+    }
+}
+
+
