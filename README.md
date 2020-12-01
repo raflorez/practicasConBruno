@@ -1,4 +1,4 @@
-# practicasConBruno
+# Practice-in-cplusplus
 Bienvenidos, está en la recontrucción de lo que vimos la última clase, si pueden mejorarlo no duden en subirlo.
 ## CONSIGNA
 
